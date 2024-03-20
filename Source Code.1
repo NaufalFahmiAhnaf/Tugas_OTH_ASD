@@ -1,0 +1,65 @@
+#include <stdio.h> // Library standar untuk input/output
+#include <stdlib.h> // Library standar untuk alokasi memori, konversi, dll
+#include <string.h> // Library standar untuk manipulasi string
+
+// Fungsi untuk mendapatkan nilai angka dari kartu
+int getCardValue(char card) {
+    if (card == 'J') return 11; // Jika kartu adalah J, nilainya adalah 11
+    else if (card == 'Q') return 12; // Jika kartu adalah Q, nilainya adalah 12
+    else if (card == 'K') return 13; // Jika kartu adalah K, nilainya adalah 13
+    else if (card == '1') return 10; // Jika kartu adalah 10, nilainya adalah 10
+    else return (int)(card - '0'); // Untuk kartu dengan nilai 1-9, nilai angka sama dengan karakter kartu dikurangi '0'
+}
+
+// Fungsi untuk menampilkan urutan kartu
+void printCards(char *cards, int length) {
+    for (int i = 0; i < length; i++) { // Loop untuk mencetak setiap kartu
+        printf("%c ", cards[i]); // Mencetak kartu ke layar
+    }
+    printf("\n");
+}
+
+// Fungsi untuk mengurutkan kartu
+int sortCards(char *cards, int length) {
+    int swaps = 0; // Variabel untuk menghitung jumlah pertukaran
+    for (int i = 0; i < length - 1; i++) { // Loop untuk iterasi melalui setiap kartu
+        int min_idx = i; // Variabel untuk menyimpan indeks kartu terkecil yang ditemukan
+        for (int j = i; j < length; j++) { // Loop untuk mencari kartu terkecil yang belum diurutkan
+            // Konversi kartu ke nilai angka untuk membandingkan
+            if (getCardValue(cards[j]) < getCardValue(cards[min_idx])) { // Jika nilai kartu saat ini lebih kecil dari nilai kartu terkecil yang ditemukan sejauh ini
+                min_idx = j; // Update indeks kartu terkecil yang ditemukan
+            }
+        }
+        if (min_idx != i) // Jika kartu terkecil bukanlah kartu saat ini
+        {
+            char temp = cards[i]; // Tukar kartu saat ini dengan kartu terkecil
+            cards[i] = cards[min_idx];
+            cards[min_idx] = temp;
+            swaps++; // Tambahkan jumlah pertukaran
+            printf("Pertukaran %d : ", swaps);
+            printCards(cards, length); // Tampilkan urutan kartu setelah pertukaran
+        }
+        
+    }
+    return swaps; // Mengembalikan jumlah pertukaran
+}
+
+int main() {
+    int n;
+    printf("Masukkan jumlah kartu: ");
+    scanf("%d", &n); // Membaca jumlah kartu dari pengguna
+
+    char cards[n]; // Deklarasi array untuk menyimpan kartu
+
+    printf("Masukkan nilai kartu (1-10, J, Q, K): ");
+    for (int i = 0; i < n; i++) { // Loop untuk memasukkan nilai kartu
+        scanf(" %c", &cards[i]); // Membaca nilai kartu dari pengguna
+    }
+
+    int swaps = sortCards(cards, n); // Memanggil fungsi untuk mengurutkan kartu dan mendapatkan jumlah pertukaran
+
+    printf("\nJumlah minimal langkah pertukaran: %d\n", swaps); // Menampilkan jumlah minimal langkah pertukaran
+
+    free(cards); // Melepaskan memori yang dialokasikan untuk array kartu
+    return 0; // Mengembalikan nilai 0 sebagai tanda program selesai
+}
